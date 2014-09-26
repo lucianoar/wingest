@@ -1,16 +1,32 @@
+//Sub section
+//Slider
+
 @import "foundation/functions";
 
+//Sub section
 $sub-section-height: rem-calc(130);
 $sub-section-spacing: rem-calc(0 0 10);
 $sub-section-title-size: rem-calc(16);
 
-
 .sub-section{
   height:$sub-section-height;
   margin:$sub-section-spacing;
-  border:1px solid #000;
+  background:#ccc;
+  overflow:hidden;
   h1{
     text-transform:uppercase;
     font-size:$sub-section-title-size;
+  }
+}
+
+
+//Slider
+.slider{
+  position:relative;
+  will-change:transform;
+  height:$sub-section-height;
+  cursor:pointer;
+  .slide{
+    height:$sub-section-height;
   }
 }
