@@ -46,6 +46,22 @@
           </div>
         
         </div>
+        
+        <div class="controls">
+          
+          <div class="positions">
+            <div></div>
+            <div><a href=""></a></div>
+            <div><a href=""></a></div>
+            <div></div>
+          </div>
+          
+          <div class="control-back">
+            <div class="control"></div>
+          </div>
+          
+        </div>
+        
       
       </div>
     
