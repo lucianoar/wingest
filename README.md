@@ -2,7 +2,6 @@
 
 Code for Torneo Wingest webpage
 
-## Requirements
-
+## Bower Requirements
 Foundation
-Bower
+gsap
