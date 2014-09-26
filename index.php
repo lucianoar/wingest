@@ -58,7 +58,23 @@
       </div>
 
       <div id="goleadores" class="sub-section columns small-12 medium-6">
-        <h1>Goleadores</h1>
+        
+        <div class="slider">
+        
+          <div id="goleadores" class="small-4 slide left">
+            <h1>Goleadores</h1>
+          </div>
+          
+          <div class="small-4 slide left">
+            <h1>Prueba 2</h1>
+          </div>
+          
+          <div class="small-4 slide left">
+            <h1>Prueba 3</h1>
+          </div>
+        
+        </div>
+        
       </div>
 
     </div>
