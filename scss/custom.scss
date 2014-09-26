@@ -11,7 +11,7 @@ $sub-section-title-size: rem-calc(16);
 .sub-section{
   height:$sub-section-height;
   margin:$sub-section-spacing;
-  background:#ccc;
+  background:#efefef;
   overflow:hidden;
   h1{
     text-transform:uppercase;
@@ -21,6 +21,8 @@ $sub-section-title-size: rem-calc(16);
 
 
 //Slider
+$slider-controls-height: rem-calc(20);
+
 .slider{
   position:relative;
   will-change:transform;
@@ -30,3 +32,61 @@ $sub-section-title-size: rem-calc(16);
     height:$sub-section-height;
   }
 }
+
+.controls{
+    position:absolute;
+    top:$sub-section-height - $slider-controls-height;
+    left:0;
+    height: $slider-controls-height;
+    
+    div.control-back{
+      z-index:1;
+      position:absolute;
+      height:$slider-controls-height;
+      left:$slider-controls-height;
+      
+      div.control{
+        position:absolute;
+        background-image:url('../img/slider-control.svg');
+        width:$slider-controls-height;
+        height:$slider-controls-height;
+      }
+      
+    }
+    
+    div.positions{
+      z-index:2;
+      position:absolute;
+      height:$slider-controls-height;
+      width:80px;
+      
+      div{
+      
+        z-index:2;
+        float:left;
+        width:$slider-controls-height;
+        height:$slider-controls-height;
+        background-image:url('../img/slider-controls-background.svg');
+        
+        a{
+        
+        }
+      
+      }
+    }
+    
+    .curpos{
+      position:absolute;
+      background:red;
+      width:40px;
+      height:$slider-controls-height;
+      left:$slider-controls-height;
+      
+      .control{
+        width:$slider-controls-height;
+        height:$slider-controls-height;
+        background:#000;
+      }
+    }
+    
+  }
