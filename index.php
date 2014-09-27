@@ -21,8 +21,8 @@
       </div>
       
       <div id="social" class="column small-12 medium-6">
-        <div class="column small-6">Twitter</div>
-        <div class="column small-6">Facebook</div>
+        <div class="column small-8">Twitter</div>
+        <div class="column small-4">Facebook</div>
       </div>
     
     </div>
