@@ -51,8 +51,8 @@
           
           <div class="positions">
             <div></div>
-            <div><a href=""></a></div>
-            <div><a href=""></a></div>
+            <div class="selector"><a href="#"></a></div>
+            <div class="selector"><a href="#"></a></div>
           </div>
           
           <div class="control-back">

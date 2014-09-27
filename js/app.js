@@ -26,7 +26,13 @@ $(document).ready(function(){
       
       setIndex: function(k){
         $v.attr('data-index',k)
-        },
+      },
+        
+      setWidth: function(){
+        
+        this.slidewidth = $(this.obj).find('.slide').width();
+        
+      },
       
       tstart:0, //touch start time
       tend:0, //touch end time
@@ -40,11 +46,17 @@ $(document).ready(function(){
         this.obj.addEventListener('touchmove',this.touchmove.bind(null,this));
         this.obj.addEventListener('touchend',this.touchend.bind(null,this));
         
-        //~ this.control[0].addEventListener('click',this.click.bind(null,this))
-		  },
+        console.log(this.control[0]);
+        
+        if(this.control[0]){
+          this.control[0].addEventListener('click',this.click.bind(null,this))
+          }
+        
+      },
 
       click: function(sl,ev){
         
+        console.log('click')
         sl.moveTo(2,1)
         
         },
@@ -52,6 +64,7 @@ $(document).ready(function(){
       touchstart: function(sl,ev){
                 
         sl.xstart = sl.xend = ev.touches[0].pageX;
+        sl.ystart = sl.yend = ev.touches[0].pageY;
         sl.tstart = new Date();
         
       },
@@ -59,10 +72,13 @@ $(document).ready(function(){
       touchmove: function(sl,ev){
         
         sl.xend = ev.touches[0].pageX;
+        sl.yend = ev.touches[0].pageY;
           
-        sl.delta = Number(((sl.xend - sl.xstart)/sl.slidewidth).toPrecision(4))
+        sl.delta = Number(((sl.xend - sl.xstart)/sl.slidewidth).toPrecision(4));
         
-        if(Math.abs(sl.delta) > 0.2){
+        sl.deltaY = Number(((sl.yend - sl.ystart)/130).toPrecision(4));
+        
+        if(Math.abs(sl.delta) > 0.07 && sl.deltaY < 0.5){
           TweenLite.to(sl.obj,0,{x: (-sl.curpos*sl.slidewidth)+(sl.xend-sl.xstart)})
           TweenLite.to(sl.control,0,{x:(sl.controlwidth*sl.curpos)-(sl.delta*sl.controlwidth)})
           }
@@ -83,11 +99,14 @@ $(document).ready(function(){
         //~ console.log('t:%f',0.4/speed);
         //~ console.log('curpos:%f',sl.curpos);
         
-        if( Math.abs(sl.delta) > 0.05 && Math.abs(sl.delta) < 0.3 && Math.abs(speed) > 0.2 ){ //Movimiento rapido
+        if( Math.abs(sl.delta) > 0.05 && Math.abs(sl.delta) < 0.6 && Math.abs(speed) > 0.2 ){ //Movimiento rapido
           (sl.delta < 0) ? sl.moveForward(0.4/speed) : sl.moveBackward(0.4/speed);
-        }else if( Math.abs(sl.delta) > 0.3 ){ //Movimiento largo
+          console.log('rapido');
+        }else if( Math.abs(sl.delta) > 0.6 ){ //Movimiento largo
+          console.log('largo');
           (sl.delta < 0) ? sl.moveForward(0.4/speed) : sl.moveBackward(0.4/speed);
         }else{ //Movimiento corto
+          console.log('corto');
           sl.moveTo(sl.curpos,0.4/speed);
         }
       },
@@ -121,6 +140,13 @@ $(document).ready(function(){
     
     slider.setIndex(sliders.length - 1);
     slider.setHandlers();
+    
+    window.addEventListener('resize',function(ev){
+      for(i=0;i<=sliders.length;i++){
+        sliders[i].setWidth();
+        sliders[i].moveTo(sliders[i].curpos,5)
+        }
+      })
     
     })
   })
