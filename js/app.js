@@ -16,13 +16,13 @@ $(document).ready(function(){
       
       curpos: 0, //current position
       
-      control: $v.find('.control'),
+      control: $v.parent().find('.controls .control'),
       
-      controlwidth: this.control,
+      controlwidth: $v.parent().find('.controls .control').width(),
       
       slides: $v.find('.slide').length - 1,
 
-      slidewidth: $v.find('.slide')[0].offsetWidth,
+      slidewidth: $v.find('.slide').width(),
       
       setIndex: function(k){
         $v.attr('data-index',k)
@@ -39,7 +39,15 @@ $(document).ready(function(){
         this.obj.addEventListener('touchstart',this.touchstart.bind(null,this));
         this.obj.addEventListener('touchmove',this.touchmove.bind(null,this));
         this.obj.addEventListener('touchend',this.touchend.bind(null,this));
+        
+        //~ this.control[0].addEventListener('click',this.click.bind(null,this))
 		  },
+
+      click: function(sl,ev){
+        
+        sl.moveTo(2,1)
+        
+        },
 
       touchstart: function(sl,ev){
                 
@@ -56,6 +64,7 @@ $(document).ready(function(){
         
         if(Math.abs(sl.delta) > 0.2){
           TweenLite.to(sl.obj,0,{x: (-sl.curpos*sl.slidewidth)+(sl.xend-sl.xstart)})
+          TweenLite.to(sl.control,0,{x:(sl.controlwidth*sl.curpos)-(sl.delta*sl.controlwidth)})
           }
         
         },
@@ -89,6 +98,7 @@ $(document).ready(function(){
           this.curpos++;
           }
         TweenLite.to(this.obj,Math.abs(t),{x:-this.slidewidth*this.curpos, ease:Power4.easeOut})
+        TweenLite.to(this.control,Math.abs(t),{x:this.controlwidth*this.curpos, ease:Power4.easeOut})
         },
       
       moveBackward: function(t){
@@ -97,15 +107,17 @@ $(document).ready(function(){
           this.curpos--;
           }
         TweenLite.to(this.obj,Math.abs(t),{x:-this.slidewidth*this.curpos, ease:Power4.easeOut})
+        TweenLite.to(this.control,Math.abs(t),{x:this.controlwidth*this.curpos, ease:Power4.easeOut})
         
         },
         
       moveTo: function(pos,t){
-        TweenLite.to(this.obj,Math.abs(t),{x:TweenLite.to(this.obj,1,{x:-this.slidewidth*pos}), ease:Power4.easeOut})
+        TweenLite.to(this.obj,Math.abs(t),{x:-this.slidewidth*pos, ease:Power4.easeOut})
+        TweenLite.to(this.control,Math.abs(t),{x:this.controlwidth*pos, ease:Power4.easeOut})
         }
       }
     
-    sliders.push(slider)
+    sliders.push(slider);
     
     slider.setIndex(sliders.length - 1);
     slider.setHandlers();
