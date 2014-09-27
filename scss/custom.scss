@@ -3,6 +3,12 @@
 
 @import "foundation/functions";
 
+body{
+  background-image: url('../img/background.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 //Sub section
 $sub-section-height: rem-calc(130);
 $sub-section-spacing: rem-calc(0 0 10);
@@ -16,6 +22,8 @@ $sub-section-title-size: rem-calc(16);
   h1{
     text-transform:uppercase;
     font-size:$sub-section-title-size;
+    color:white;
+    font-weight:bold;
   }
 }
 
@@ -36,14 +44,16 @@ $slider-controls-height: rem-calc(20);
 .controls{
     position:absolute;
     top:$sub-section-height - $slider-controls-height;
-    left:0;
+    left:rem-calc(320 - 60px);
     height: $slider-controls-height;
     
     div.control-back{
       z-index:1;
       position:absolute;
+      width:40px; //Setear con js!!!
       height:$slider-controls-height;
       left:$slider-controls-height;
+      background:#bcbcbc;
       
       div.control{
         position:absolute;
@@ -90,3 +100,13 @@ $slider-controls-height: rem-calc(20);
     }
     
   }
+
+
+#manofthematch{
+  background-image:url('../img/fondo1.png');
+  background-size:cover;
+}
+#teamsofthematch{
+  background-image:url('../img/fondo2.png');
+  background-size:cover;
+}
