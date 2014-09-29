@@ -43,6 +43,11 @@ body{
   }
 }
 
+@media #{$xlarge-up} {
+  html,body{
+    font-size:140%;
+  }
+}
 //Sub section
 $sub-section-height: rem-calc(130);
 $sub-section-spacing: rem-calc(0 0 10);
@@ -91,7 +96,7 @@ $slider-controls-height: rem-calc(20);
     div.control-back{
       z-index:1;
       position:absolute;
-      width:40px; //Setear con js!!!
+      width:rem-calc(40); //Setear con js!!!
       height:$slider-controls-height;
       left:$slider-controls-height;
       background:#bcbcbc;
@@ -99,6 +104,7 @@ $slider-controls-height: rem-calc(20);
       div.control{
         position:absolute;
         background-image:url('../img/slider-control.svg');
+        background-size:$slider-controls-height;
         width:$slider-controls-height;
         height:$slider-controls-height;
       }
@@ -109,7 +115,7 @@ $slider-controls-height: rem-calc(20);
       z-index:2;
       position:absolute;
       height:$slider-controls-height;
-      width:80px;
+      width:rem-calc(80);
       
       div{
       
@@ -123,26 +129,14 @@ $slider-controls-height: rem-calc(20);
         }
       &:nth-child(1){
         background-image:url('../img/slider-controls-first.svg');
+        background-size:$slider-controls-height;
       }
       }
 
       .selector{
           background-image:url('../img/slider-controls-background.svg');
+          background-size:$slider-controls-height;
         }
-    }
-    
-    .curpos{
-      position:absolute;
-      background:red;
-      width:40px;
-      height:$slider-controls-height;
-      left:$slider-controls-height;
-      
-      .control{
-        width:$slider-controls-height;
-        height:$slider-controls-height;
-        background:#000;
-      }
     }
     
   }

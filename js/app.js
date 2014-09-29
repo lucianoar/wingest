@@ -18,6 +18,8 @@ $(document).ready(function(){
       
       control: $v.parent().find('.controls .control'),
       
+      controlskeleton: '<div class=\"controls\"><div class=\"positions\"><div></div><div class=\"selector\"><a href=\"#\"></a></div><div class=\"selector\"><a href=\"#\"></a></div></div><div class=\"control-back\"><div class=\"control\"></div></div></div>',
+      
       controlwidth: $v.parent().find('.controls .control').width(),
       
       slides: $v.find('.slide').length - 1,
@@ -25,13 +27,17 @@ $(document).ready(function(){
       slidewidth: $v.find('.slide').width(),
       
       setIndex: function(k){
-        $v.attr('data-index',k)
+        $v.attr('data-index',k);
       },
         
       setWidth: function(){
         
-        this.slidewidth = $(this.obj).find('.slide').width();
+        o = $(this.obj);
+        p = o.parent();
         
+        this.slidewidth = o.find('.slide').width();
+        if(p.find('.controls').length != 0)
+          p.find('.controls')[0].style.left = this.slidewidth - p.find('.positions').width();
       },
       
       tstart:0, //touch start time
@@ -139,12 +145,13 @@ $(document).ready(function(){
     sliders.push(slider);
     
     slider.setIndex(sliders.length - 1);
+    slider.setWidth();
     slider.setHandlers();
     
     window.addEventListener('resize',function(ev){
-      for(i=0;i<=sliders.length;i++){
+      for(i=0;i<sliders.length;i++){
         sliders[i].setWidth();
-        sliders[i].moveTo(sliders[i].curpos,5)
+        sliders[i].moveTo(sliders[i].curpos,0)
         }
       })
     
