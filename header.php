@@ -16,6 +16,7 @@
   </head>
   
   <body>
+    <div id="load"></div>
     <div class="row">
         
       <div id="logo" class="column small-12 medium-6">

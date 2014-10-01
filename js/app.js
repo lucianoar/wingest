@@ -187,7 +187,7 @@ $(document).ready(function(){
     
     xhr = new XMLHttpRequest();
     
-    xhr.open('POST','http://localhost/wingest/ajax.php',true);
+    xhr.open('POST','resultados.php',true);
     
     xhr.addEventListener('progress',function(ev){
       t = ev.totalSize;
@@ -195,6 +195,11 @@ $(document).ready(function(){
       
       console.log('Porcentaje: %d\%',Math.round(100*l/t));     
       });
+    
+    xhr.addEventListener('readystatechange',function(ev){
+      //~ console.log(ev,'rsc')
+      if (xhr.readyState === 4) $('section').html(xhr.responseText);
+      })
     
     xhr.send()
     }
