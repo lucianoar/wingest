@@ -1,5 +1,7 @@
 <?php require('header.php');?>
 
+<div id="wrapper" class="row">
+
   <section id="home">
       
     <div class="row">
@@ -92,6 +94,8 @@
     </div>
 
   </section>
+  
+</div>
 
 <!--Footer-->
 <?php require('footer.php');?>

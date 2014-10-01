@@ -198,7 +198,7 @@ $(document).ready(function(){
     
     xhr.addEventListener('readystatechange',function(ev){
       //~ console.log(ev,'rsc')
-      if (xhr.readyState === 4) $('section').html(xhr.responseText);
+      if (xhr.readyState === 4) $('#wrapper.row').html(xhr.responseText);
       })
     
     xhr.send()

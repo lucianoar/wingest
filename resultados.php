@@ -7,5 +7,5 @@ header("Content-Type: text/plain");
 header("Content-Length:".(strlen($response)));
 flush();
 ob_flush();
-sleep(20);
+sleep(0);
 echo($response);
