@@ -85,6 +85,21 @@ $slider-controls-height: rem-calc(20);
   .slide{
     height:$sub-section-height;
   }
+  
+  .shadow-side{
+    height:$sub-section-height;
+    background-image:url('../img/slider-reach-side-shadow.svg');
+    width: 70px;
+    position: absolute;
+    background-size: contain;
+    background-repeat: no-repeat;
+    left: -70px;
+    
+    &.active{
+      transform: translateX(35px);
+      transition: transform 800ms ease-in-out;
+    }
+  }
 }
 
 .controls{

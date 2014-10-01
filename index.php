@@ -1,32 +1,7 @@
 <?php require('header.php');?>
 
-<body>
-  
   <section id="home">
       
-      <div class="row">
-      
-      <div id="logo" class="column small-12 medium-6">
-        <h1>Torneo Wingest</h1>
-      </div>
-      
-      <div id="mystats" class="column small-12 medium-6">
-        <p>stats</p>
-      </div>
-    </div>
-    
-    <div class="row">
-      <div id="menu" class="column small-12 medium-6">
-        <p>Menu?</p>
-      </div>
-      
-      <div id="social" class="column small-12 medium-6">
-        <div class="column small-8">Twitter</div>
-        <div class="column small-4">Facebook</div>
-      </div>
-    
-    </div>
-    
     <div class="row">
       
       <div id="resultados" class="sub-section columns small-12 medium-6">
@@ -36,6 +11,8 @@
       <div class="sub-section columns small-12 medium-6">
         
         <div class="slider">
+          
+          <div class="shadow-side"></div>
           
           <div id="manofthematch" class="small-6 slide left">
             <h1>Jugador de la fecha</h1>

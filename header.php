@@ -14,3 +14,27 @@
     <link rel="stylesheet" href="stylesheets/custom.css" />
     <script src="bower_components/modernizr/modernizr.js"></script>
   </head>
+  
+  <body>
+    <div class="row">
+        
+      <div id="logo" class="column small-12 medium-6">
+        <h1>Torneo Wingest</h1>
+      </div>
+        
+      <div id="mystats" class="column small-12 medium-6">
+        <p>stats</p>
+      </div>
+    </div>
+      
+    <div class="row">
+      <div id="menu" class="column small-12 medium-6">
+        <p>Menu?</p>
+      </div>
+        
+      <div id="social" class="column small-12 medium-6">
+        <div class="column small-8">Twitter</div>
+        <div class="column small-4">Facebook</div>
+      </div>
+      
+    </div>

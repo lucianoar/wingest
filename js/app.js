@@ -26,6 +26,11 @@ $(document).ready(function(){
 
       slidewidth: $v.find('.slide').width(),
       
+      shadow: $v.find('.shadow-side')[0],
+      
+      curpos_beginning: false,
+      curpos_ending: false,
+      
       setIndex: function(k){
         $v.attr('data-index',k);
       },
@@ -84,16 +89,29 @@ $(document).ready(function(){
         
         sl.deltaY = Number(((sl.yend - sl.ystart)/130).toPrecision(4));
         
-        if(Math.abs(sl.delta) > 0.07 && sl.deltaY < 0.5){
-          TweenLite.to(sl.obj,0,{x: (-sl.curpos*sl.slidewidth)+(sl.xend-sl.xstart)})
-          TweenLite.to(sl.control,0,{x:(sl.controlwidth*sl.curpos)-(sl.delta*sl.controlwidth)})
+        if((sl.beginning && sl.delta < 0) || (sl.ending && sl.delta > 0)){
+          
+          if(Math.abs(sl.delta) > 0.07 && sl.deltaY < 0.5){
+            TweenLite.to(sl.obj,0,{x: (-sl.curpos*sl.slidewidth)+(sl.xend-sl.xstart)})
+            TweenLite.to(sl.control,0,{x:(sl.controlwidth*sl.curpos)-(sl.delta*sl.controlwidth)})
           }
+          
+        }else{
+          
+          console.log(sl.delta);
+          
+          (sl.beginning)? sl.shadow.className = sl.shadow.className + ' active':null;
+          
+          
+        }
         
-        },
+      },
         
       touchend: function(sl,ev){
         
         sl.tend = new Date();
+        
+        sl.shadow.className = 'shadow-side'
 
         interval = sl.tend - sl.tstart
         speed = (sl.xend - sl.xstart)/(sl.tend - sl.tstart)
@@ -107,14 +125,20 @@ $(document).ready(function(){
         
         if( Math.abs(sl.delta) > 0.05 && Math.abs(sl.delta) < 0.6 && Math.abs(speed) > 0.2 ){ //Movimiento rapido
           (sl.delta < 0) ? sl.moveForward(0.4/speed) : sl.moveBackward(0.4/speed);
-          console.log('rapido');
+          //~ console.log('rapido');
         }else if( Math.abs(sl.delta) > 0.6 ){ //Movimiento largo
-          console.log('largo');
+          //~ console.log('largo');
           (sl.delta < 0) ? sl.moveForward(0.4/speed) : sl.moveBackward(0.4/speed);
         }else{ //Movimiento corto
-          console.log('corto');
+          //~ console.log('corto');
           sl.moveTo(sl.curpos,0.4/speed);
         }
+        
+        (sl.curpos === 0) ? sl.beginning = true : sl.beginning = false;
+        (sl.curpos === sl.slides) ? sl.ending = true : sl.ending = false;
+        
+        console.log(sl)
+        
       },
       
       moveForward: function(t){
@@ -158,3 +182,19 @@ $(document).ready(function(){
     })
   })
 
+
+  ajax_test = function(){
+    
+    xhr = new XMLHttpRequest();
+    
+    xhr.open('POST','http://localhost/wingest/ajax.php',true);
+    
+    xhr.addEventListener('progress',function(ev){
+      t = ev.totalSize;
+      l = ev.loaded;
+      
+      console.log('Porcentaje: %d\%',Math.round(100*l/t));     
+      });
+    
+    xhr.send()
+    }

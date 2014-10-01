@@ -1,0 +1,7 @@
+<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="70" height="130" id="svg4383" version="1.1" viewbox="0 0 70 130">
+<defs>
+  <radialGradient id="shadowGradient">
+            <stop offset="10%" stop-color="#fff"/>
+            <stop offset="95%" stop-color="rgba(255,255,255,0)"/>
+        </radialGradient>
+</defs><g id="layer1"><path d="m0 0 70 0 0 130-70 0z" id="rect3587" fill="url(#shadowGradient)"/></g></svg>
