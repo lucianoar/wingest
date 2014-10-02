@@ -1,11 +1,33 @@
-$(document).foundation();
-
-$(document).ready(function(){
+Wingest = {
   
-  sliders = [];
-  var $v;
+  wrapper: document.getElementById('wrapper'),
   
-  $('.slider').each(function(k,v){
+  xhr: new XMLHttpRequest(),
+  
+  init: function(){
+    $(document).foundation();
+    this.load('home');
+    },
+  
+  sliders: [],
+  
+  load: function(section){
+    this.xhr.open('POST','views/'+section+'.html',true)
+    this.xhr.send();
+    
+    this.xhr.addEventListener('load',loaded);
+    
+    function loaded(ev){
+      console.log(ev);
+      console.log(ev.currentTarget.responseText);
+      Wingest.wrapper.innerHTML += ev.currentTarget.responseText;
+      Wingest.setLayout(section);
+    };
+  },
+  
+  
+  setLayout: function(section){
+    $('#'+section+' .slider').each(function(k,v){
     $v = $(v)
     //set width equals to elements inside
     v.style.width = $v.find('.slide').length * 100 +'%'
@@ -166,9 +188,9 @@ $(document).ready(function(){
         }
       }
     
-    sliders.push(slider);
+    Wingest.sliders.push(slider);
     
-    slider.setIndex(sliders.length - 1);
+    slider.setIndex(Wingest.sliders.length - 1);
     slider.setWidth();
     slider.setHandlers();
     
@@ -180,26 +202,7 @@ $(document).ready(function(){
       })
     
     })
-  })
-
-
-  ajax_test = function(){
-    
-    xhr = new XMLHttpRequest();
-    
-    xhr.open('POST','resultados.php',true);
-    
-    xhr.addEventListener('progress',function(ev){
-      t = ev.totalSize;
-      l = ev.loaded;
-      
-      console.log('Porcentaje: %d\%',Math.round(100*l/t));     
-      });
-    
-    xhr.addEventListener('readystatechange',function(ev){
-      //~ console.log(ev,'rsc')
-      if (xhr.readyState === 4) $('#wrapper.row').html(xhr.responseText);
-      })
-    
-    xhr.send()
     }
+}
+
+Wingest.init();
