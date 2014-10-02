@@ -15,13 +15,15 @@ Wingest = {
     this.xhr.open('POST','views/'+section+'.html',true)
     this.xhr.send();
     
-    this.xhr.addEventListener('load',loaded);
-    
-    function loaded(ev){
+    this.xhr.addEventListener('load',function(ev){
       console.log(ev);
       console.log(ev.currentTarget.responseText);
       Wingest.wrapper.innerHTML += ev.currentTarget.responseText;
       Wingest.setLayout(section);
+      });
+    
+    function loaded(ev){
+      
     };
   },
   
