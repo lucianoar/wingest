@@ -1,10 +1,6 @@
 <?php
 
-  $view[] = file_get_contents('./home.html', true);
+  header('Wingest-Layout-dependencies:["views/home.html","img/fondo1.png","img/fondo2.png"]');
   
-  //~ print_r($view);
-  
-  $a = json_encode($view);
-  
-  echo($a);
+  echo '';
 ?>

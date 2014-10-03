@@ -2,30 +2,71 @@ Wingest = {
   
   wrapper: document.getElementById('wrapper'),
   
-  xhr: new XMLHttpRequest(),
-  
   init: function(){
     $(document).foundation();
-    this.load('home');
+    this.getLayout('home');
     },
   
   sliders: [],
   
-  load: function(section){
-    this.xhr.open('POST','views/'+section+'.html',true)
-    this.xhr.send();
+  sections: [],
+  
+  requests: function(){
     
-    this.xhr.addEventListener('load',function(ev){
-      console.log(ev);
-      console.log(ev.currentTarget.responseText);
+    },
+  
+  getLayout: function(section){
+    var xhr = new XMLHttpRequest();
+    
+    var index;
+     
+    xhr.open('POST','views/'+section+'.php',true)
+    debugger;
+    //~ index = Wingest.requests.length - 1;
+    
+    xhr.addEventListener('loadstart',function(ev){
+      
+      console.log('start')
+      
+      })
+    
+    xhr.addEventListener('progress',function(ev){
+      //~ console.log(xhr.readyState)
+      //~ if(xhr.readyState === 2){
+        //~ Wingest.requests[index][0] += ev.total
+        //~ }
+      //~ console.log('progress')
+    })
+    
+    xhr.addEventListener('load',function(ev){
+      console.log(xhr.getResponseHeader('Wingest-Layout-dependencies'))
+      
+      dep = JSON.parse(xhr.getResponseHeader('Wingest-Layout-dependencies'));
+      
+      xhrdep = [];
+      
+      total = 0;
+      for(var i=0;i<dep.length; i++){
+        xhrdep[i] = new XMLHttpRequest();
+        xhrdep[i].open('POST',dep[i],true);
+        
+        xhrdep[i].addEventListener('load',function(ev){total += ev.total;console.log(total)})
+        xhrdep[i].send();
+        
+        }
+      
+      console.log(total);
+      //~ console.log('load');
+      //~ console.log(ev.currentTarget.responseText);
       Wingest.wrapper.innerHTML += ev.currentTarget.responseText;
       Wingest.setLayout(section);
-      });
+    });
     
-    function loaded(ev){
-      
-    };
+    xhr.send();
+    
   },
+  
+  
   
   
   setLayout: function(section){
@@ -81,7 +122,7 @@ Wingest = {
         this.obj.addEventListener('touchmove',this.touchmove.bind(null,this));
         this.obj.addEventListener('touchend',this.touchend.bind(null,this));
         
-        console.log(this.control[0]);
+        //~ console.log(this.control[0]);
         
         if(this.control[0]){
           this.control[0].addEventListener('click',this.click.bind(null,this))
