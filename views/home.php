@@ -1,6 +1,11 @@
 <?php
 
-  header('Wingest-Layout-dependencies:["views/home.html","img/fondo1.png","img/fondo2.png"]');
-  
-  echo '';
+$s = file_get_contents('home.html');
+
+header("Content-Type: text/plain");
+header("Content-Length:".strlen($s));
+header("Wingest-size:".strlen($s));
+flush();
+ob_flush();
+echo($s);
 ?>

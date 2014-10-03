@@ -2,8 +2,13 @@ Wingest = {
   
   wrapper: document.getElementById('wrapper'),
   
+  layout_progress: new Event('layout_progress'),
+  
   init: function(){
     $(document).foundation();
+    this.wrapper.addEventListener('layout_progress',function(){
+      console.log('progress');
+      })
     this.getLayout('home');
     },
   
@@ -20,8 +25,9 @@ Wingest = {
     
     var index;
      
-    xhr.open('POST','views/'+section+'.php',true)
-    debugger;
+    var dep,dep_loaded
+    
+    xhr.open('HEAD','views/load.php?section='+section,true)
     //~ index = Wingest.requests.length - 1;
     
     xhr.addEventListener('loadstart',function(ev){
@@ -30,35 +36,45 @@ Wingest = {
       
       })
     
-    xhr.addEventListener('progress',function(ev){
-      //~ console.log(xhr.readyState)
-      //~ if(xhr.readyState === 2){
-        //~ Wingest.requests[index][0] += ev.total
-        //~ }
-      //~ console.log('progress')
-    })
-    
     xhr.addEventListener('load',function(ev){
       console.log(xhr.getResponseHeader('Wingest-Layout-dependencies'))
       
       dep = JSON.parse(xhr.getResponseHeader('Wingest-Layout-dependencies'));
       
-      xhrdep = [];
+      var dep_loaded=[];
       
-      total = 0;
+      for(var i=0; i<dep.length; i++){
+        dep_loaded[i]=[]; //size loaded
+        dep_loaded[i]=[]; //total size
+      }
+      
+      var xhrdep = [];
+      
+      var total = 0;
+      var loaded = 0;
+      
+      //Function for progress of each dependencie
+      dep_progress = function(i,ev){
+          
+            size = ev.total || Number(ev.currentTarget.getResponseHeader('Wingest-size'));
+            
+            dep_loaded[i][0] = ev.loaded;
+            dep_loaded[i][1] = size
+            
+            Wingest.wrapper.dispatchEvent(Wingest.layout_progress);
+          
+      }
+      
       for(var i=0;i<dep.length; i++){
         xhrdep[i] = new XMLHttpRequest();
         xhrdep[i].open('POST',dep[i],true);
         
-        xhrdep[i].addEventListener('load',function(ev){total += ev.total;console.log(total)})
+        xhrdep[i].addEventListener('progress',dep_progress.bind(null,i))
+        
         xhrdep[i].send();
         
         }
       
-      console.log(total);
-      //~ console.log('load');
-      //~ console.log(ev.currentTarget.responseText);
-      Wingest.wrapper.innerHTML += ev.currentTarget.responseText;
       Wingest.setLayout(section);
     });
     
