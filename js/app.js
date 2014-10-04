@@ -61,11 +61,21 @@ Wingest = {
             dep_loaded[i][0] = ev.loaded;
             dep_loaded[i][1] = size
             
-            Wingest.wrapper.dispatchEvent(Wingest.layout_progress);
+            //~ if(i==0)console.log(dep_loaded[0][0]/dep_loaded[0][1])
+            var a=0
+            var t=0
+            for(var j=0, n=dep_loaded.length;j<n;j++){
+              if(dep_loaded[j][0] && dep_loaded[j][1]){
+                a += dep_loaded[j][0]
+                t += dep_loaded[j][1]
+                }
+              }
+            console.log(100*a/t);
+            //~ Wingest.wrapper.dispatchEvent(Wingest.layout_progress);
           
       }
       
-      for(var i=0;i<dep.length; i++){
+      for(var i=0, n=dep.length;i<n; i++){
         xhrdep[i] = new XMLHttpRequest();
         xhrdep[i].open('POST',dep[i],true);
         
