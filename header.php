@@ -16,7 +16,9 @@
   </head>
   
   <body>
-    <div id="load"></div>
+    <div id="load">
+      <div id="progress-bar"></div>
+    </div>
     <div class="row">
         
       <div id="logo" class="column small-12 medium-6">

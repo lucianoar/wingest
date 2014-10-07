@@ -2,8 +2,6 @@ Wingest = {
   
   wrapper: document.getElementById('wrapper'),
   
-  layout_progress: new Event('layout_progress'),
-  
   init: function(){
     $(document).foundation();
     this.wrapper.addEventListener('layout_progress',function(){
@@ -16,84 +14,30 @@ Wingest = {
   
   sections: [],
   
-  requests: function(){
+  section: function(name,o){
     
-    },
-  
-  getLayout: function(section){
-    var xhr = new XMLHttpRequest();
+    this.name = name;
+    this.contentUrl = o.content;
+    this.contentHtml = '';
+    this.attachs = o.attachs;
+    this.loaded = false;
+    this.cached = false;
     
-    var index;
-     
-    var dep,dep_loaded
-    
-    xhr.open('HEAD','views/load.php?section='+section,true)
-    //~ index = Wingest.requests.length - 1;
-    
-    xhr.addEventListener('loadstart',function(ev){
-      
-      console.log('start')
-      
-      })
-    
-    xhr.addEventListener('load',function(ev){
-      console.log(xhr.getResponseHeader('Wingest-Layout-dependencies'))
-      
-      dep = JSON.parse(xhr.getResponseHeader('Wingest-Layout-dependencies'));
-      
-      var dep_loaded=[];
-      
-      for(var i=0; i<dep.length; i++){
-        dep_loaded[i]=[]; //size loaded
-        dep_loaded[i]=[]; //total size
+    if(!Wingest.sections[this.name]){
+      Wingest.sections.push(this);
+      //access by name, a hash
+      Wingest.sections[this.name] = this;
       }
-      
-      var xhrdep = [];
-      
-      var total = 0;
-      var loaded = 0;
-      
-      //Function for progress of each dependencie
-      dep_progress = function(i,ev){
-          
-            size = ev.total || Number(ev.currentTarget.getResponseHeader('Wingest-size'));
-            
-            dep_loaded[i][0] = ev.loaded;
-            dep_loaded[i][1] = size
-            
-            //~ if(i==0)console.log(dep_loaded[0][0]/dep_loaded[0][1])
-            var a=0
-            var t=0
-            for(var j=0, n=dep_loaded.length;j<n;j++){
-              if(dep_loaded[j][0] && dep_loaded[j][1]){
-                a += dep_loaded[j][0]
-                t += dep_loaded[j][1]
-                }
-              }
-            console.log(100*a/t);
-            //~ Wingest.wrapper.dispatchEvent(Wingest.layout_progress);
-          
-      }
-      
-      for(var i=0, n=dep.length;i<n; i++){
-        xhrdep[i] = new XMLHttpRequest();
-        xhrdep[i].open('POST',dep[i],true);
-        
-        xhrdep[i].addEventListener('progress',dep_progress.bind(null,i))
-        
-        xhrdep[i].send();
-        
-        }
-      
-      Wingest.setLayout(section);
-    });
     
-    xhr.send();
+    Wingest.section.load(this);
+    
+    this.setContentHtml = function(content){
+      this.contentHtml = content
+      }
+    
+    
     
   },
-  
-  
-  
   
   setLayout: function(section){
     $('#'+section+' .slider').each(function(k,v){
@@ -274,4 +218,77 @@ Wingest = {
     }
 }
 
-Wingest.init();
+//send header to get section content and attachs
+Wingest.section.getSection = function(section){
+  var xhr = new XMLHttpRequest()
+  xhr.open('HEAD','views/load.php?section='+section,true);
+    
+  xhr.addEventListener('load',function(ev){
+    header = JSON.parse(ev.target.getResponseHeader('Wingest-Section'));
+    section = new Wingest.section(section,header);
+  })
+    
+  xhr.send();
+}
+
+//load section and attachs or get them from cache
+Wingest.section.load = function(o){
+  
+  progress = function(i,ev){
+    if(!progress.reqs[i]){progress.reqs[i] = {loaded:0,subtotal:0,calls: 0}};
+    if(!progress.oldtimestamp){progress.oldtimestamp = ev.timeStamp};
+    
+    progress.reqs[i].loaded = ev.loaded;
+    progress.reqs[i].subtotal = ev.total || Number(ev.target.getResponseHeader('Wingest-Size'));
+    progress.reqs[i].calls++;
+    
+    if(progress.reqs[i].calls == 1){
+      progress.totalsize += ev.total
+    }
+    
+    if(!progress.allStarted && progress.reqs.filter(function(v){if(v !== undefined) return v;}).length == progress.totalreqs ){
+      progress.allStarted = true;
+    }else if(progress.allStarted && (ev.timeStamp - progress.oldtimestamp > 200)){
+      var loaded_now = 0
+      for(var j = 0; j < progress.totalreqs; j++){
+        loaded_now += progress.reqs[j].loaded
+        }
+      console.debug(Number(100*loaded_now/progress.totalsize))
+      var perc = Number(100*loaded_now/progress.totalsize).toString()+'%';
+      TweenLite.to('#progress-bar',0.2,{x:perc})
+      progress.oldtimestamp = Date.now();
+    }
+    
+    //~ debugger;
+  }
+  
+  progress.oldtimestamp
+  progress.totalreqs = o.attachs.length + 1
+  progress.reqs = new Array()
+  progress.allStarted = false
+  
+  progress.totalsize = 0;
+  
+  var xhr =  new XMLHttpRequest();
+  xhr.open('POST',o.contentUrl,true);
+  xhr.addEventListener('progress',progress.bind(null,0));
+  xhr.addEventListener('load',function(ev){
+    //~ Wingest.sections[o.name]
+    Wingest.sections[o.name].setContentHtml(ev.target.responseText)
+    });
+  
+  xhr.send();
+  
+  var attachs=[]
+  for(var i=1, n=o.attachs.length; i <= n; i++){
+    attachs[i] = new XMLHttpRequest();
+    attachs[i].open('POST',o.attachs[i-1],true);
+    attachs[i].addEventListener('progress',progress.bind(null,i));
+    attachs[i].send();
+    }
+}
+
+Wingest.section.renderSection = function(section){
+  Wingest.wrapper.innerHTML += Wingest.sections[section].contentHtml
+}
+//~ Wingest.init();

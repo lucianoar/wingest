@@ -1,10 +1,13 @@
 <?php
   
-  $headers = array(
-    'home' => '["views/home.php","img/fondo1.png","img/fondo2.png","img/fondo3.png"]',
+  $header['home'] = array(
+    'content' => 'views/home.php',
+    'attachs' => array("img/fondo1.png","img/fondo2.png","img/fondo3.png")
   );
   
-  header('Wingest-Layout-dependencies:'.$headers[$_GET['section']]);
+  $s = json_encode($header[$_GET['section']]);
+  
+  header('Wingest-Section:'.$s);
   
   echo '';
 ?>
