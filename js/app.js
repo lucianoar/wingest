@@ -4,10 +4,7 @@ Wingest = {
   
   init: function(){
     $(document).foundation();
-    this.wrapper.addEventListener('layout_progress',function(){
-      console.log('progress');
-      })
-    this.getLayout('home');
+    this.section.getSection('home');
     },
   
   sliders: [],
@@ -22,6 +19,8 @@ Wingest = {
     this.attachs = o.attachs;
     this.loaded = false;
     this.cached = false;
+    
+    this.relations = o.relations;
     
     if(!Wingest.sections[this.name]){
       Wingest.sections.push(this);
@@ -236,7 +235,7 @@ Wingest.section.load = function(o){
   
   progress = function(i,ev){
     if(!progress.reqs[i]){progress.reqs[i] = {loaded:0,subtotal:0,calls: 0}};
-    if(!progress.oldtimestamp){progress.oldtimestamp = ev.timeStamp};
+    //~ if(!progress.oldtimestamp){progress.oldtimestamp = ev.timeStamp};
     
     progress.reqs[i].loaded = ev.loaded;
     progress.reqs[i].subtotal = ev.total || Number(ev.target.getResponseHeader('Wingest-Size'));
@@ -248,21 +247,23 @@ Wingest.section.load = function(o){
     
     if(!progress.allStarted && progress.reqs.filter(function(v){if(v !== undefined) return v;}).length == progress.totalreqs ){
       progress.allStarted = true;
-    }else if(progress.allStarted && (ev.timeStamp - progress.oldtimestamp > 200)){
+    }else if(progress.allStarted){
       var loaded_now = 0
       for(var j = 0; j < progress.totalreqs; j++){
         loaded_now += progress.reqs[j].loaded
         }
-      console.debug(Number(100*loaded_now/progress.totalsize))
       var perc = Number(100*loaded_now/progress.totalsize).toString()+'%';
       TweenLite.to('#progress-bar',0.2,{x:perc})
-      progress.oldtimestamp = Date.now();
+      //~ progress.oldtimestamp = Date.now();
     }
     
+    if(Number(loaded_now/progress.totalsize) >= 1){
+      Wingest.wrapper.dispatchEvent(Wingest.events.sectionLoaded)
+    }
     //~ debugger;
   }
   
-  progress.oldtimestamp
+  //~ progress.oldtimestamp
   progress.totalreqs = o.attachs.length + 1
   progress.reqs = new Array()
   progress.allStarted = false
@@ -286,9 +287,19 @@ Wingest.section.load = function(o){
     attachs[i].addEventListener('progress',progress.bind(null,i));
     attachs[i].send();
     }
+  
+  progress.sectionLoaded = function(o,ev){
+    Wingest.section.renderSection(o.name);
+    }
+  
+  Wingest.wrapper.addEventListener('sectionLoaded',progress.sectionLoaded.bind(null,o))
 }
 
 Wingest.section.renderSection = function(section){
   Wingest.wrapper.innerHTML += Wingest.sections[section].contentHtml
 }
 //~ Wingest.init();
+
+Wingest.events = {
+  sectionLoaded: new Event('sectionLoaded'),
+}
