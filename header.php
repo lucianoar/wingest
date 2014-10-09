@@ -16,7 +16,7 @@
   </head>
   
   <body>
-    <div id="load">
+    <div id="load" class="active">
       <div id="progress-bar"></div>
     </div>
     <div class="row">

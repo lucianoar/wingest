@@ -1,6 +1,7 @@
 Wingest = {
   
   wrapper: document.getElementById('wrapper'),
+  load: document.getElementById('load'),
   
   init: function(){
     $(document).foundation();
