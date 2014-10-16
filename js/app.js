@@ -7,6 +7,12 @@ Wingest = {
     $(document).foundation();
     this.section.getSection('home');
     },
+    
+  attach: function(url,data){
+    this.url = url;
+    this.type = (/\.(gif|jpg|jpeg|tiff|png)$/i).test(url)?'image':'other';
+    this.data = data;
+  },
   
   sliders: [],
   
@@ -264,6 +270,11 @@ Wingest.section.load = function(o){
     //~ debugger;
   }
   
+  attachLoaded = function(i,ev){
+    debugger;
+    Wingest.section.attachs.push(new Wingest.attach(o.attachs[i-1],ev.data))
+  }
+  
   //~ progress.oldtimestamp
   progress.totalreqs = o.attachs.length + 1
   progress.reqs = new Array()
@@ -284,8 +295,11 @@ Wingest.section.load = function(o){
   var attachs=[]
   for(var i=1, n=o.attachs.length; i <= n; i++){
     attachs[i] = new XMLHttpRequest();
-    attachs[i].open('POST',o.attachs[i-1],true);
+    attachs[i].open('GET',o.attachs[i-1],true);
+    attachs[i].responseType = (/\.(gif|jpg|jpeg|tiff|png)$/i).test(o.attachs[i-1])?'blob':'text'
+    console.debug(attachs[i].responseType)
     attachs[i].addEventListener('progress',progress.bind(null,i));
+    attachs[i].addEventListener('load',attachLoaded.bind(null,i));
     attachs[i].send();
     }
   
@@ -296,11 +310,33 @@ Wingest.section.load = function(o){
   Wingest.wrapper.addEventListener('sectionLoaded',progress.sectionLoaded.bind(null,o))
 }
 
+Wingest.section.attachs = [];
+
 Wingest.section.renderSection = function(section){
-  Wingest.wrapper.innerHTML += Wingest.sections[section].contentHtml
+  Wingest.wrapper.innerHTML += Wingest.sections[section].contentHtml;
 }
 //~ Wingest.init();
 
 Wingest.events = {
   sectionLoaded: new Event('sectionLoaded'),
+}
+
+Wingest.db = function(){
+  var request = indexedDB.open("wingest",2);
+
+  request.onupgradeneeded = function() {
+  // The database did not previously exist, so create object stores and indexes.
+   db = request.result;
+    images = db.createObjectStore("images", {keyPath: "url"});
+    images.createIndex('data','data')
+
+    // Populate with initial data.
+    images.put({url: "asdf.png"});
+  };
+
+  request.onsuccess = function() {
+    db = request.result;
+  };
+
+  
 }
