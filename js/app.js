@@ -226,20 +226,25 @@ Wingest = {
 
 //send header to get section content and attachs
 Wingest.section.getSection = function(section){
-  var xhr = new XMLHttpRequest()
-  xhr.open('HEAD','views/load.php?section='+section,true);
+  
+  if(!Wingest.section[section]){
+  
+    var xhr = new XMLHttpRequest()
+    xhr.open('HEAD','views/load.php?section='+section,true);
+      
+    xhr.addEventListener('load',function(ev){
+      header = JSON.parse(ev.target.getResponseHeader('Wingest-Section'));
+      section = new Wingest.section(section,header);
+    })
+      
+    xhr.send();
     
-  xhr.addEventListener('load',function(ev){
-    header = JSON.parse(ev.target.getResponseHeader('Wingest-Section'));
-    section = new Wingest.section(section,header);
-  })
-    
-  xhr.send();
+  }
 }
 
 //load section and attachs or get them from cache
 Wingest.section.load = function(o){
-  
+
   progress = function(i,ev){
     if(!progress.reqs[i]){progress.reqs[i] = {loaded:0,subtotal:0,calls: 0}};
     //~ if(!progress.oldtimestamp){progress.oldtimestamp = ev.timeStamp};
@@ -271,8 +276,8 @@ Wingest.section.load = function(o){
   }
   
   attachLoaded = function(i,ev){
-    debugger;
-    Wingest.section.attachs.push(new Wingest.attach(o.attachs[i-1],ev.data))
+    //~ debugger;
+    Wingest.section.attachs.push(new Wingest.attach(o.attachs[i-1],ev.target.response))
   }
   
   //~ progress.oldtimestamp
@@ -296,8 +301,8 @@ Wingest.section.load = function(o){
   for(var i=1, n=o.attachs.length; i <= n; i++){
     attachs[i] = new XMLHttpRequest();
     attachs[i].open('GET',o.attachs[i-1],true);
-    attachs[i].responseType = (/\.(gif|jpg|jpeg|tiff|png)$/i).test(o.attachs[i-1])?'blob':'text'
-    console.debug(attachs[i].responseType)
+    attachs[i].responseType = (/\.(gif|jpg|jpeg|tiff|png)$/i).test(o.attachs[i-1])?'blob':'text';
+
     attachs[i].addEventListener('progress',progress.bind(null,i));
     attachs[i].addEventListener('load',attachLoaded.bind(null,i));
     attachs[i].send();
